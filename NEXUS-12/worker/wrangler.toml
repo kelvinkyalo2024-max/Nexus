@@ -1,0 +1,6 @@
+name = "nexus-12-api"
+main = "src/index.js"
+compatibility_date = "2026-11-01"
+
+[vars]
+OPENAI_MODEL = "gpt-4.1-mini"

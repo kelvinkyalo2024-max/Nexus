@@ -1,0 +1,18 @@
+NEXUS-12 QUICK START
+
+1. Deploy /public as a Cloudflare Pages site.
+2. Deploy /worker as a Cloudflare Worker:
+   cd worker
+   npm install
+   npx wrangler login
+   npx wrangler secret put OPENAI_API_KEY
+   npx wrangler secret put NEXUS_ACCESS_TOKEN
+   npx wrangler deploy
+3. Configure /runner/.env using /runner/.env.example.
+4. In runner:
+   npm install
+   npx playwright install chromium
+   npm start -- "Build a responsive task management website"
+
+Keep your access token private. The runner runs on your own computer.
+See README.md for full instructions and safety limitations.

@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080d18">
+<title>NEXUS-12 | Autonomous Engineering</title>
+<style>
+:root{--bg:#080d18;--panel:#111a2a;--panel2:#172338;--line:#26364e;--text:#edf4ff;--muted:#91a2ba;--mint:#55e6c1;--gold:#e8bd72;--red:#ff7785}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px Inter,system-ui,Arial,sans-serif}
+header{height:68px;background:#0c1422;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(18px,calc((100% - 1160px)/2))}
+.logo{font-weight:950;letter-spacing:2px;font-size:20px}.logo span{color:var(--mint)}.status{font-size:11px;color:var(--muted);display:flex;gap:8px;align-items:center}.dot{width:8px;height:8px;border-radius:50%;background:#64748b}.dot.ok{background:var(--mint);box-shadow:0 0 12px var(--mint)}
+main{max-width:1160px;margin:auto;padding:28px 18px 60px}.hero{display:flex;justify-content:space-between;align-items:center;gap:15px;flex-wrap:wrap;margin-bottom:22px}.eyebrow{color:var(--mint);letter-spacing:3px;font-size:10px;font-weight:900}h1{font-size:clamp(32px,5vw,48px);letter-spacing:-2px;margin:8px 0}.muted{color:var(--muted);font-size:12px;line-height:1.6}.tag{border:1px solid #315b58;color:var(--mint);background:#102d2b;padding:9px 13px;border-radius:30px;font-size:11px;font-weight:800}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}.card{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:18px;min-width:0}.statlabel{color:var(--muted);font-size:11px}.statvalue{font-size:25px;font-weight:900;margin-top:8px}.green{color:var(--mint)}.gold{color:var(--gold)}
+.layout{display:grid;grid-template-columns:1.3fr .8fr;gap:15px;align-items:start}.section{font-size:15px;font-weight:850;margin:0 0 15px}
+textarea,input{width:100%;background:#091321;border:1px solid var(--line);border-radius:11px;color:white;padding:13px;font:inherit;outline:none}textarea{min-height:135px;resize:vertical;line-height:1.6}textarea:focus,input:focus{border-color:var(--mint)}label{display:block;color:var(--muted);font-size:11px;margin:13px 0 7px}
+button{border:0;border-radius:10px;padding:12px 15px;cursor:pointer;font-size:12px;font-weight:850}button:disabled{opacity:.4;cursor:not-allowed}.primary{background:var(--mint);color:#06251e}.secondary{background:#253650;color:white}.danger{background:#49242d;color:#ffb4be}.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}
+.progress{height:7px;background:#263449;border-radius:20px;overflow:hidden;margin:15px 0 7px}.progress span{display:block;height:100%;width:0;background:var(--mint);transition:width .25s}
+.timer{font-size:35px;font-weight:950;letter-spacing:2px;font-variant-numeric:tabular-nums;margin:12px 0}.log{max-height:310px;overflow:auto;display:flex;flex-direction:column;gap:8px}.logitem{background:#0a1422;border:1px solid #23334a;border-radius:10px;padding:10px;font-size:11px;line-height:1.5}.logtime{color:var(--mint);font-size:10px;margin-bottom:4px}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:#081321;border:1px solid var(--line);border-radius:10px;padding:12px;color:#c8f8e9;font-size:11px;max-height:230px;overflow:auto}
+footer{text-align:center;color:#64748b;font-size:10px;padding:28px}
+@media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}}@media(max-width:420px){main{padding:20px 12px}.card{padding:14px}.timer{font-size:29px}}
+</style>
+</head>
+<body>
+<header><div class="logo">NEXUS<span>-12</span></div><div class="status"><span id="dot" class="dot"></span><span id="connection">API NOT CHECKED</span></div></header>
+<main>
+<section class="hero"><div><div class="eyebrow">AUTONOMOUS SOFTWARE ENGINEERING</div><h1>Build. Test. Deliver.</h1><div class="muted">Mission control for your local coding and browser agent.</div></div><div class="tag">MAX SESSION · 12 HOURS</div></section>
+<section class="stats">
+<div class="card"><div class="statlabel">LOCAL RUNNER</div><div class="statvalue gold" id="runnerState">NOT STARTED</div></div>
+<div class="card"><div class="statlabel">SESSION LIMIT</div><div class="statvalue">12:00:00</div></div>
+<div class="card"><div class="statlabel">AI GATEWAY</div><div class="statvalue" id="apiState">UNKNOWN</div></div>
+<div class="card"><div class="statlabel">BROWSER ENGINE</div><div class="statvalue">PLAYWRIGHT</div></div>
+</section>
+<div class="layout">
+<div>
+<section class="card"><h2 class="section">01 / Configure connection</h2>
+<label>Cloudflare Worker URL</label><input id="apiUrl" placeholder="https://your-worker.workers.dev">
+<label>Access token (stored only in this browser tab)</label><input id="token" type="password" placeholder="Your NEXUS_ACCESS_TOKEN">
+<div class="actions"><button class="primary" id="checkBtn">Check connection</button><button class="secondary" id="saveBtn">Use for this tab</button></div>
+<p class="muted">Do not paste your OpenAI key here. The AI key belongs only in the Worker secret configuration.</p>
+</section>
+<section class="card" style="margin-top:14px"><h2 class="section">02 / Mission brief</h2>
+<label>What should NEXUS-12 build or do?</label><textarea id="mission" placeholder="Example: Create a responsive inventory web app with product search, add/edit/delete, local persistence and a README."></textarea>
+<div class="actions"><button class="primary" id="copyCommand">Copy local start command</button><button class="secondary" id="sendMission">Send mission to AI gateway</button></div>
+<p class="muted" id="missionStatus">The local runner is started from your computer using the command shown after you submit a mission.</p>
+</section>
+<section class="card" style="margin-top:14px"><h2 class="section">03 / AI response</h2><pre id="response">No response yet.</pre></section>
+</div>
+<div>
+<section class="card"><h2 class="section">12-hour operating policy</h2><div class="timer" id="timer">12:00:00</div><div class="muted">The local runner enforces the session limit. This dashboard does not keep a computer or browser running.</div><div class="progress"><span id="bar"></span></div><div class="muted">Purposeful browser checks use randomized 5–55 second waits. No fake activity or security bypassing.</div></section>
+<section class="card" style="margin-top:14px"><h2 class="section">Agent capabilities</h2><p class="muted">• Create and edit project files inside a workspace<br>• Run allowlisted development commands<br>• Open websites and interact using Playwright<br>• Capture browser screenshots<br>• Save checkpoints and report progress</p></section>
+<section class="card" style="margin-top:14px"><h2 class="section">Activity</h2><div id="log" class="log"><div class="logitem">Dashboard loaded. Connect your Worker to begin.</div></div></section>
+</div>
+</div>
+<footer>NEXUS-12 · BUILD · TEST · IMPROVE · DELIVER</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+let apiUrl=sessionStorage.getItem('nexusApiUrl')||'',token=sessionStorage.getItem('nexusToken')||'';
+$('apiUrl').value=apiUrl;
+$('token').value=token;
+function log(s){let d=document.createElement('div');d.className='logitem';let t=document.createElement('div');t.className='logtime';t.textContent=new Date().toLocaleTimeString();let b=document.createElement('div');b.textContent=s;d.append(t,b);$('log').prepend(d)}
+function config(){apiUrl=$('apiUrl').value.trim().replace(/\/+$/,'');token=$('token').value.trim();if(!apiUrl||!token)throw Error('Enter the Worker URL and access token first.');sessionStorage.setItem('nexusApiUrl',apiUrl);sessionStorage.setItem('nexusToken',token)}
+$('saveBtn').onclick=()=>{try{config();log('Connection settings saved for this tab.')}catch(e){alert(e.message)}};
+$('checkBtn').onclick=async()=>{try{config();$('connection').textContent='CHECKING';let r=await fetch(apiUrl+'/api/health',{headers:{Authorization:'Bearer '+token}});let j=await r.json();if(!r.ok)throw Error(j.error||'Connection failed');$('dot').classList.add('ok');$('connection').textContent='WORKER CONNECTED';$('apiState').textContent='ONLINE';$('apiState').className='statvalue green';log('Worker connection verified.')}catch(e){$('connection').textContent='CONNECTION FAILED';$('apiState').textContent='OFFLINE';$('apiState').className='statvalue gold';log(e.message);alert(e.message)}};
+$('copyCommand').onclick=async()=>{let m=$('mission').value.trim();if(!m)return alert('Enter a mission first.');let cmd='npm start -- '+JSON.stringify(m);try{await navigator.clipboard.writeText(cmd);$('missionStatus').textContent='Command copied. Run it from the runner folder on your computer.';log('Local runner command copied.')}catch(e){$('missionStatus').textContent=cmd}};
+$('sendMission').onclick=async()=>{try{config();let mission=$('mission').value.trim();if(!mission)throw Error('Enter a mission first.');$('missionStatus').textContent='Sending mission…';let r=await fetch(apiUrl+'/api/agent',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({mission})});let j=await r.json();if(!r.ok)throw Error(j.error||'Request failed');$('response').textContent=j.reply||JSON.stringify(j,null,2);$('missionStatus').textContent='AI response received. Start the local runner to execute file and browser actions.';log('Mission sent to AI gateway.')}catch(e){$('missionStatus').textContent=e.message;log(e.message);alert(e.message)}};
+</script>
+</body></html>
